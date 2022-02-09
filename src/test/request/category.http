@@ -1,0 +1,22 @@
+###
+POST {{host}}/user/login
+Content-Type: application/x-www-form-urlencoded
+
+username=dogy&password=123
+
+> {% client.global.set("auth_token", response.body.data); %}
+
+###
+GET {{host}}/admin/category?page=1&size=2&sort=id,desc
+
+###
+POST {{host}}/admin/category
+token: {{auth_token}}
+Content-Type: application/x-www-form-urlencoded
+
+name=Cat2&code=C2
+
+###
+DELETE {{host}}/admin/category/2
+token: {{auth_token}}
+Content-Type: application/x-www-form-urlencoded

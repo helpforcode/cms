@@ -36,28 +36,29 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
         // else:
+        String msg = "Authentication failed";
 
         if (!StringUtils.hasLength(token)) {
             log.warn("Token empty");
-            throw new AuthenticationException("Authentication failed");
+            throw new AuthenticationException(msg);
         }
         String userId;
         try {
             userId = JWT.decode(token).getAudience().get(0);
         } catch (Exception e) {
             log.warn("Token invalid");
-            throw new AuthenticationException("Authentication failed");
+            throw new AuthenticationException(msg);
         }
 
         User user = userRepository.findById(Integer.valueOf(userId)).orElseThrow(() -> {
             log.warn("User not found");
-            return new AuthenticationException("Authentication failed");
+            return new AuthenticationException(msg);
         });
 
         try {
             TokenUtil.verifyToken(token, user);
         } catch (Exception e) {
-            throw new AuthenticationException(e.getMessage());
+            throw new AuthenticationException(msg);
         }
         return true;
     }
