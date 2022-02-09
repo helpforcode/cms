@@ -21,6 +21,10 @@ public class ResponseWrapper {
         return new ResponseWrapper(FAILED, message, data);
     }
 
+    public static ResponseWrapper failed(Integer code, String message, Object data) {
+        return new ResponseWrapper(code, message, data);
+    }
+
     public static ResponseWrapper succeed(Object data) {
         return new ResponseWrapper(SUCCEED, "", data);
     }

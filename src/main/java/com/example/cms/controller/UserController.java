@@ -1,10 +1,9 @@
 package com.example.cms.controller;
 
+import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.UserDto;
 import com.example.cms.service.UserService;
-import com.example.cms.storage.dao.UserDao;
 import com.example.cms.storage.entity.User;
-import com.sun.javaws.progress.PreloaderPostEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +37,11 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserDto dto) throws Exception {
         return service.login(dto);
+    }
+
+    @AdminLogin
+    @GetMapping("/test")
+    public String test() {
+        return "OK";
     }
 }

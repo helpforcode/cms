@@ -7,8 +7,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.naming.AuthenticationException;
+
 @RestControllerAdvice
 public class MyExceptionHandler {
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseWrapper authenticationException(Exception e, WebRequest request) {
+        e.printStackTrace();
+        return ResponseWrapper.failed(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), null);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseWrapper exception(Exception e, WebRequest request) {
