@@ -7,23 +7,25 @@ username=dogy&password=123
 > {% client.global.set("auth_token", response.body.data); %}
 
 ###
-GET {{host}}/admin/word?page=1&size=10&sort=id,desc
+GET {{host}}/admin/daily-word?page=1&size=10&sort=id,desc
 
 ###
-POST {{host}}/admin/word
+POST {{host}}/admin/daily-word
 token: {{auth_token}}
 Content-Type: application/x-www-form-urlencoded
 
-word=Pursue
+words=1,2&wordPrimary=3&publishedAt=2022-02-11
 
 ###
-DELETE {{host}}/admin/word/2
+DELETE {{host}}/admin/daily-word/2
 token: {{auth_token}}
 Content-Type: application/x-www-form-urlencoded
 
 ###
-PUT {{host}}/admin/word/2
+
+###
+PUT {{host}}/admin/daily-word/1
 token: {{auth_token}}
 Content-Type: application/x-www-form-urlencoded
 
-word=Work
+words=2,3&wordPrimary=1&publishedAt=2022-02-12
