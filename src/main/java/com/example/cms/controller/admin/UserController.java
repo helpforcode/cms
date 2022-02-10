@@ -1,4 +1,4 @@
-package com.example.cms.controller;
+package com.example.cms.controller.admin;
 
 import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.UserDto;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 public class UserController {
     @Autowired
     private UserService service;

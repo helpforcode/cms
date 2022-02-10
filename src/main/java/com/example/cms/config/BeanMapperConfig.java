@@ -4,8 +4,10 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.example.cms.dto.ArticleDto;
 import com.example.cms.dto.DailyWordDto;
+import com.example.cms.dto.MenuDto;
 import com.example.cms.storage.entity.Article;
 import com.example.cms.storage.entity.DailyWord;
+import com.example.cms.storage.entity.Menu;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
@@ -41,6 +43,16 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
 
                 })
                 .exclude("publishedAt")
+                .mapNulls(false)
+                .byDefault().register();
+
+        factory.classMap(MenuDto.class, Menu.class)
+                .customize(new CustomMapper<MenuDto, Menu>() {
+                    @Override
+                    public void mapAtoB(MenuDto from, Menu to, MappingContext context) {
+                    }
+
+                })
                 .mapNulls(false)
                 .byDefault().register();
     }

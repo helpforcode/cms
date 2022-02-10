@@ -1,12 +1,4 @@
 ###
-POST {{host}}/user/login
-Content-Type: application/x-www-form-urlencoded
-
-username=dogy&password=123
-
-> {% client.global.set("auth_token", response.body.data); %}
-
-###
 GET {{host}}/admin/daily-word?page=1&size=10&sort=id,desc
 
 ###
