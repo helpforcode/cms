@@ -1,8 +1,10 @@
 package com.example.cms.service;
 
+import com.example.cms.dto.ArticleDto;
 import com.example.cms.dto.CategoryDto;
-import com.example.cms.storage.entity.Category;
-import com.example.cms.storage.repository.CategoryRepository;
+import com.example.cms.storage.entity.Article;
+import com.example.cms.storage.repository.ArticleRepository;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,29 +13,29 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class CategoryService {
+public class ArticleService {
 
     @Autowired
-    private CategoryRepository repository;
+    private MapperFacade mapperFacade;
 
-    public Page<Category> list(Pageable pageable) {
+    @Autowired
+    private ArticleRepository repository;
+
+    public Page<Article> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public Category find(Integer id) {
+    public Article find(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
-    public void add(CategoryDto dto) {
-        Category model = new Category()
-                .setName(dto.getName())
-                .setCode(dto.getCode());
-
+    public void add(ArticleDto dto) {
+        Article model = mapperFacade.map(dto, Article.class);
         repository.save(model);
     }
 
     public void del(Integer id) {
-        Category model = repository.findById(id).orElse(null);
+        Article model = repository.findById(id).orElse(null);
         if (Objects.isNull(model)) {
             return;
         }
@@ -41,13 +43,12 @@ public class CategoryService {
         repository.save(model);
     }
 
-    public void update(CategoryDto dto) {
-        Category model = repository.findById(dto.getId()).orElse(null);
+    public void update(ArticleDto dto) {
+        Article model = repository.findById(dto.getId()).orElse(null);
         if (Objects.isNull(model)) {
             return;
         }
-        model.setName(dto.getName());
-        model.setCode(dto.getCode());
+        mapperFacade.map(dto, model);
         repository.save(model);
     }
 
