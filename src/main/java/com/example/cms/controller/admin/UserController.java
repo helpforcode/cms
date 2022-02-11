@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// @CrossOrigin({"localhost"})
+@CrossOrigin
 @RestController
 @RequestMapping("/admin/user")
 public class UserController {
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto dto) throws Exception {
+    public String login(@RequestBody UserDto dto) throws Exception {
         return service.login(dto);
     }
 
