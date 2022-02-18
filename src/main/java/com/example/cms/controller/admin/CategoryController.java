@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 
+@CrossOrigin
 @RestController
 @RequestMapping("/admin/category")
 public class CategoryController {

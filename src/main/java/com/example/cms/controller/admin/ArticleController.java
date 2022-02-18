@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/admin/article")
 public class ArticleController {
@@ -17,7 +18,7 @@ public class ArticleController {
 
     @AdminLogin
     @PostMapping
-    public void add(ArticleDto dto) {
+    public void add(@RequestBody ArticleDto dto) {
         service.add(dto);
     }
 

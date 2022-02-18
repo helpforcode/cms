@@ -2,6 +2,7 @@ package com.example.cms.config;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.example.cms.dto.ArticleDto;
 import com.example.cms.dto.DailyWordDto;
 import com.example.cms.dto.MenuDto;
@@ -25,11 +26,13 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                     @Override
                     public void mapAtoB(ArticleDto from, Article to, MappingContext context) {
                         to.setPublishedAt(DateUtil.parse(from.getPublishedAt(),
-                                DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN));
+                                DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN, DatePattern.NORM_DATETIME_MINUTE_PATTERN));
+                        to.setImages(JSON.toJSONString(from.getImages()));
                     }
 
                 })
                 .exclude("publishedAt")
+                .exclude("images")
                 .mapNulls(false)
                 .byDefault().register();
 
