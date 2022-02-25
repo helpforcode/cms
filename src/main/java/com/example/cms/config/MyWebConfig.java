@@ -1,5 +1,6 @@
 package com.example.cms.config;
 
+import com.example.cms.global.RequestInterceptor;
 import com.example.cms.global.security.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +18,13 @@ public class MyWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authenticationInterceptor())
-                .addPathPatterns("/**");
+        registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(requestInterceptor()).addPathPatterns("/**");
+    }
+
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return new RequestInterceptor();
     }
 
     @Bean
