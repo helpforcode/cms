@@ -62,3 +62,31 @@ create table word
     word varchar(10) default '' not null
 );
 
+create table image
+(
+    id int auto_increment,
+    name varchar(50) default '' not null,
+    path varchar(200) default '' not null,
+    url varchar(200) default '' not null,
+    size bigint default 0 not null,
+    created timestamp default current_timestamp not null,
+    constraint image_pk
+        primary key (id)
+);
+
+create table tag
+(
+    id int auto_increment,
+    name varchar(50) default '' not null,
+    constraint tag_pk
+        primary key (id)
+);
+
+create table img_tag
+(
+    id int auto_increment,
+    tag_id int default 0 not null,
+    img_id int default 0 not null,
+    constraint tag_pk
+        primary key (id)
+);
