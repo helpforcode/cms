@@ -5,9 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.example.cms.dto.ArticleDto;
 import com.example.cms.dto.DailyWordDto;
+import com.example.cms.dto.ImageDto;
 import com.example.cms.dto.MenuDto;
 import com.example.cms.storage.entity.Article;
 import com.example.cms.storage.entity.DailyWord;
+import com.example.cms.storage.entity.Image;
 import com.example.cms.storage.entity.Menu;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
@@ -53,6 +55,16 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                 .customize(new CustomMapper<MenuDto, Menu>() {
                     @Override
                     public void mapAtoB(MenuDto from, Menu to, MappingContext context) {
+                    }
+
+                })
+                .mapNulls(false)
+                .byDefault().register();
+
+        factory.classMap(ImageDto.class, Image.class)
+                .customize(new CustomMapper<ImageDto, Image>() {
+                    @Override
+                    public void mapAtoB(ImageDto from, Image to, MappingContext context) {
                     }
 
                 })

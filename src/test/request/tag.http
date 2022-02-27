@@ -10,7 +10,7 @@ token: {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "dog"
+  "name": "cat"
 }
 
 ###

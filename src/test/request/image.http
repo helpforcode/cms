@@ -1,23 +1,7 @@
 ###
 GET {{host}}/admin/image?page=1&size=10&sort=id,desc
 ###
-GET {{host}}/admin/image/1
-token: {{auth_token}}
-
-###
-POST {{host}}/admin/image
-token: {{auth_token}}
-Content-Type: application/json
-
-{
-  "name": "fluffy",
-  "path": "None",
-  "url": "http://www.baidu.com",
-  "size": 1234
-}
-
-###
-DELETE {{host}}/admin/image/5
+GET {{host}}/admin/image/10
 token: {{auth_token}}
 
 ###
@@ -31,3 +15,22 @@ Content-Type: image/*
 
 < ./image/gohan.jpg
 --WebAppBoundary--
+
+> {%
+client.global.set("image_id", response.body.data.id);
+client.global.set("image_url", response.body.data.url);
+%}
+
+###
+PUT {{host}}/admin/image/{{image_id}}
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "fluffy",
+  "tagIds": [2, 3]
+}
+
+###
+DELETE {{host}}/admin/image/5
+token: {{auth_token}}

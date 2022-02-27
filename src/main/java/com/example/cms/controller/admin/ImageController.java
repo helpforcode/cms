@@ -4,6 +4,7 @@ import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.ImageDto;
 import com.example.cms.service.ImageService;
 import com.example.cms.storage.entity.Image;
+import com.example.cms.vo.ImageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,11 +29,11 @@ public class ImageController {
         return service.saveFile(file);
     }
 
-    @AdminLogin
-    @PostMapping
-    public void add(@RequestBody ImageDto dto) {
-        service.add(dto);
-    }
+    // @AdminLogin
+    // @PostMapping
+    // public void add(@RequestBody ImageDto dto) {
+    //     service.add(dto);
+    // }
 
     @AdminLogin
     @DeleteMapping("/{id}")
@@ -49,10 +50,16 @@ public class ImageController {
 
     @AdminLogin
     @GetMapping("/{id}")
-    public Image find(@PathVariable Integer id) {
-        return service.find(id);
+    public ImageVo find(@PathVariable Integer id) {
+        return service.getImageVo(id);
     }
 
+    /**
+     * todo: return ImageVo
+     * todo: filter by tagId (join tables)
+     * @param pageable
+     * @return
+     */
     @GetMapping
     public Page<Image> list(Pageable pageable) {
         return service.list(pageable);
