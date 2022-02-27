@@ -55,7 +55,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         log.info("Request incoming: {}", builder.toString());
     }
     private RequestInterceptor appendLn(StringBuilder builder, String str) {
-        String ln = "\n\r";
+        String ln = "\n";
         builder.append(str).append(ln);
         return this;
     }
@@ -78,25 +78,22 @@ public class RequestInterceptor implements HandlerInterceptor {
         }
     }
     private void printRequestBody(StringBuilder builder, HttpServletRequest request) throws IOException {
-        RequestWrapper requestWrapper = new RequestWrapper(request);
+        HttpRequestWrapper requestWrapper = new HttpRequestWrapper(request);
         try {
             String body = requestWrapper.getBody();
             if (StringUtils.hasLength(body)) {
                 JSONObject jsonObject = JSON.parseObject(body);
                 StringBuilder jsonBody = new StringBuilder();
                 jsonObject.getInnerMap().forEach((key, obj) -> {
-                    jsonBody.append(String.format("%s=%s", key, trim(obj.toString())))
-                            .append("\r\n");
-                    ;
+                    jsonBody.append(String.format("%s: %s\n", key, trim(obj.toString())));
                 });
                 appendLn(builder, "---- REQUEST BODY ----");
                 appendLn(builder, jsonBody.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // requestWrapper.closeReader();
         }
+        appendLn(builder, "--------");
     }
     private String trim(String longStr) {
         int limit = 500;
@@ -106,4 +103,5 @@ public class RequestInterceptor implements HandlerInterceptor {
         }
         return longStr;
     }
+
 }

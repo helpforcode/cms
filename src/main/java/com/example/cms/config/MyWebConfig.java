@@ -19,7 +19,7 @@ public class MyWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(requestInterceptor()).addPathPatterns("/**");
+        // registry.addInterceptor(requestInterceptor()).addPathPatterns("/**");
     }
 
     @Bean

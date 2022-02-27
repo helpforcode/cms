@@ -1,35 +1,40 @@
 package com.example.cms.global;
 
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.WebUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
+import java.nio.charset.Charset;
 
-public class RequestWrapper extends HttpServletRequestWrapper {
+@Slf4j
+public class HttpRequestWrapper extends HttpServletRequestWrapper {
+
     private final String body;
+    public String getBody() {
+        return body;
+    }
+
     /**
      * Constructs a request object wrapping the given request.
      *
      * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
-    public RequestWrapper(HttpServletRequest request) throws IOException {
+    public HttpRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
+        // body = readInputStreamInStringFormat(request.getInputStream(), Charset.forName(request.getCharacterEncoding()));
+        body = readStream(request.getInputStream());
+        // log.info("Request Body:\n{}", body);
+    }
 
-        // ContentCachingRequestWrapper doesnt work that way and has some limitations.
-        // Only POST request and content type should be application/x-www-form-urlencoded as far as I remember.
-        // ContentCachingRequestWrapper wrapper =
-        //         WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
-
+    private String readStream(InputStream inputStream) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
             // InputStream inputStream = request.getInputStream();
-            InputStream inputStream = request.getInputStream();
             if (inputStream != null) {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 char[] charBuffer = new char[128];
@@ -51,16 +56,43 @@ public class RequestWrapper extends HttpServletRequestWrapper {
                 }
             }
         }
+        return stringBuilder.toString();
+    }
 
-        body = stringBuilder.toString();
+    private String readInputStreamInStringFormat(InputStream stream, Charset charset) throws IOException {
+        final int MAX_BODY_SIZE = 1024 * 1024 * 5; // 5MB
+        final StringBuilder bodyStringBuilder = new StringBuilder();
+        if (!stream.markSupported()) {
+            stream = new BufferedInputStream(stream);
+        }
 
+        stream.mark(MAX_BODY_SIZE + 1);
+        final byte[] entity = new byte[MAX_BODY_SIZE + 1];
+        final int bytesRead = stream.read(entity);
+
+        if (bytesRead != -1) {
+            bodyStringBuilder.append(new String(entity, 0, Math.min(bytesRead, MAX_BODY_SIZE), charset));
+            if (bytesRead > MAX_BODY_SIZE) {
+                bodyStringBuilder.append("...");
+            }
+        }
+        stream.reset();
+
+        return bodyStringBuilder.toString();
     }
 
     @Override
-    public ServletInputStream getInputStream() throws IOException {
-        final ByteArrayInputStream byteArrayInputStream = new     ByteArrayInputStream(body.getBytes());
-        ServletInputStream servletInputStream = new ServletInputStream() {
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(getInputStream()));
+    }
+
+    @Override
+    public ServletInputStream getInputStream () throws IOException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+
+        return new ServletInputStream() {
             private boolean finished = false;
+
             @Override
             public boolean isFinished() {
                 return finished;
@@ -72,22 +104,22 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             }
 
             @Override
-            public boolean isReady() {
-                return true;
-            }
-
-            @Override
             public void close() throws IOException {
                 super.close();
                 byteArrayInputStream.close();
             }
 
             @Override
-            public void setReadListener(ReadListener listener) {
-
+            public boolean isReady() {
+                return true;
             }
 
-            public int read() throws IOException {
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                throw new UnsupportedOperationException();
+            }
+
+            public int read () throws IOException {
                 int data = byteArrayInputStream.read();
                 if (data == -1) {
                     finished = true;
@@ -95,15 +127,5 @@ public class RequestWrapper extends HttpServletRequestWrapper {
                 return data;
             }
         };
-        return servletInputStream;
-    }
-
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(this.getInputStream()));
-    }
-
-    public String getBody() {
-        return this.body;
     }
 }
