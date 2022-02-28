@@ -5,6 +5,7 @@ import com.example.cms.controller.criteria.ImageCriteria;
 import com.example.cms.dto.ImageDto;
 import com.example.cms.service.ImageService;
 import com.example.cms.storage.entity.Image;
+import com.example.cms.util.PageUtil;
 import com.example.cms.vo.ImageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,11 @@ public class ImageController {
      * @return
      */
     @GetMapping
-    public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
-        return service.list(criteria, pageable);
+    public Page<ImageVo> list(ImageCriteria criteria, Pageable pageable) {
+        return pageUtil.toPage(service.list(criteria, pageable), ImageVo.class);
     }
+
+    @Autowired
+    private PageUtil pageUtil;
 
 }

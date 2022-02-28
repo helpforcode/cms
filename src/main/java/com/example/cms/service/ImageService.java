@@ -82,13 +82,15 @@ public class ImageService {
     }
 
     public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
+        Page<Image> images;
         if (CollectionUtil.isNotEmpty(criteria.getTagIds())) {
-            return repository.findAllByTagIds(criteria.getTagIds(), pageable);
+            images = repository.findAllByTagIds(criteria.getTagIds(), pageable);
         } else if (StringUtils.hasLength(criteria.getTagName())){
-            return repository.findAllByTagName(criteria.getTagName(), pageable);
+            images = repository.findAllByTagName(criteria.getTagName(), pageable);
         } else {
-            return repository.findAll(pageable);
+            images = repository.findAll(pageable);
         }
+        return images;
     }
 
     private Image find(Integer id) {
