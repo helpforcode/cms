@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -38,8 +39,14 @@ public class ImageController {
 
     @AdminLogin
     @DeleteMapping("/{id}")
-    public void del(@PathVariable Integer id) throws IOException {
+    public void del(@PathVariable Integer id) {
         service.del(id);
+    }
+
+    @AdminLogin
+    @DeleteMapping
+    public void del(@RequestBody Set<Integer> ids) {
+        service.del(ids);
     }
 
     @AdminLogin

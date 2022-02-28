@@ -9,6 +9,7 @@ import com.example.cms.storage.entity.Image;
 import com.example.cms.storage.entity.Tag;
 import com.example.cms.storage.repository.ImageRepository;
 import com.example.cms.vo.ImageVo;
+import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+@Slf4j
 @Service
 public class ImageService {
 
@@ -82,8 +84,10 @@ public class ImageService {
     public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
         if (CollectionUtil.isNotEmpty(criteria.getTagIds())) {
             return repository.findAllByTagIds(criteria.getTagIds(), pageable);
-        } else {
+        } else if (StringUtils.hasLength(criteria.getTagName())){
             return repository.findAllByTagName(criteria.getTagName(), pageable);
+        } else {
+            return repository.findAll(pageable);
         }
     }
 
@@ -105,15 +109,24 @@ public class ImageService {
         return find(model.getId());
     }
 
-    public void del(Integer id) throws IOException {
+    public void del(Integer id) {
         Image image = find(id);
         repository.deleteById(id);
         removeImage(image);
     }
 
-    private boolean removeImage(Image image) throws IOException {
+    @Transactional
+    public void del(Set<Integer> ids) {
+        ids.forEach(this::del);
+    }
+
+    private void removeImage(Image image) {
         Path path = Paths.get(image.getPath());
-        return Files.deleteIfExists(path);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Transactional
@@ -135,15 +148,6 @@ public class ImageService {
             }
             model.setTags(tags);
         }
-
-        // update tags
-        // imgTagService.delByImgId(model.getId());
-        // if (!CollectionUtils.isEmpty(dto.getTagIds())) {
-        //     ImgTagDto imgTagDto = new ImgTagDto()
-        //             .setImgId(model.getId())
-        //             .setTagIds(dto.getTagIds());
-        //     imgTagService.add(imgTagDto);
-        // }
 
         repository.save(model);
     }

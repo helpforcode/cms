@@ -79,10 +79,11 @@ public class LogRequestFilter implements Filter {
             String body = requestWrapper.getBody();
             if (StringUtils.hasLength(body)) {
                 appendLn(builder, "---- REQUEST BODY ----");
-                JSONObject jsonObject = JSON.parseObject(body);
-                jsonObject.getInnerMap().forEach((key, obj) -> {
-                    appendLn(builder, String.format("%s: %s", key, ellipsis(obj.toString())));
-                });
+                appendLn(builder, body);
+                // JSONObject jsonObject = JSON.parseObject(body);
+                // jsonObject.getInnerMap().forEach((key, obj) -> {
+                //     appendLn(builder, String.format("%s: %s", key, ellipsis(obj.toString())));
+                // });
             }
         } catch (Exception e) {
             e.printStackTrace();
