@@ -8,6 +8,7 @@ import com.example.cms.storage.entity.Image;
 import com.example.cms.util.PageUtil;
 import com.example.cms.vo.ImageVo;
 import lombok.extern.slf4j.Slf4j;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Set;
 
+@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping("/admin/image")
@@ -25,11 +27,14 @@ public class ImageController {
     @Autowired
     private ImageService service;
 
+    @Autowired
+    private MapperFacade mapperFacade;
 
     @PostMapping("/upload")
-    public Image upload(MultipartFile file) throws IOException {
+    public ImageVo upload(MultipartFile file) throws IOException {
         log.info("File:{}", file);
-        return service.saveFile(file);
+        Image image = service.saveFile(file);
+        return mapperFacade.map(image, ImageVo.class);
     }
 
     // @AdminLogin

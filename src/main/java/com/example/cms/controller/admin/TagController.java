@@ -17,8 +17,8 @@ public class TagController {
 
     @AdminLogin
     @PostMapping
-    public void add(@RequestBody TagDto dto) {
-        service.add(dto);
+    public Integer add(@RequestBody TagDto dto) {
+        return service.add(dto);
     }
 
     @AdminLogin

@@ -1,7 +1,7 @@
 ###
 GET {{host}}/admin/tag?page=1&size=10&sort=id,desc
 ###
-GET {{host}}/admin/tag/2
+GET {{host}}/admin/tag/3
 token: {{auth_token}}
 
 ###
@@ -10,7 +10,7 @@ token: {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "duck"
+  "name": "ducky"
 }
 
 ###

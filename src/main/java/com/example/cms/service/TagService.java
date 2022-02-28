@@ -33,9 +33,10 @@ public class TagService {
         return repository.findAllById(ids);
     }
 
-    public void add(TagDto dto) {
+    public Integer add(TagDto dto) {
         Tag model = mapperFacade.map(dto, Tag.class);
         repository.save(model);
+        return model.getId();
     }
 
     public void del(Integer id) {

@@ -82,6 +82,7 @@ public class ImageService {
     }
 
     public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
+        // todo: use Predication
         Page<Image> images;
         if (CollectionUtil.isNotEmpty(criteria.getTagIds())) {
             images = repository.findAllByTagIds(criteria.getTagIds(), pageable);
