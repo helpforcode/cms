@@ -3,8 +3,12 @@ GET {{host}}/admin/image?page=1&size=10&sort=id,desc&tagName=
 ###
 GET {{host}}/admin/image?page=1&size=10&sort=id,desc&tagIds[]=6
 ###
-GET {{host}}/admin/image/4
+GET {{host}}/admin/image/6
 token: {{auth_token}}
+
+> {%
+client.global.set("image_id", response.body.data.id);
+%}
 
 ###
 POST {{host}}/admin/image/upload
