@@ -1,5 +1,7 @@
 ###
-GET {{host}}/admin/image?page=1&size=10&sort=id,desc
+GET {{host}}/admin/image?page=1&size=10&sort=id,desc&tagName=c
+###
+GET {{host}}/admin/image?page=1&size=10&sort=id,desc&tagIds[]=6
 ###
 GET {{host}}/admin/image/4
 token: {{auth_token}}

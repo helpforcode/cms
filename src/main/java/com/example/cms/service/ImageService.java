@@ -3,6 +3,7 @@ package com.example.cms.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.example.cms.controller.criteria.ImageCriteria;
 import com.example.cms.dto.ImageDto;
 import com.example.cms.storage.entity.Image;
 import com.example.cms.storage.entity.Tag;
@@ -78,8 +79,12 @@ public class ImageService {
         return String.format("%s%s", imageHost, relativePath);
     }
 
-    public Page<Image> list(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
+        if (CollectionUtil.isNotEmpty(criteria.getTagIds())) {
+            return repository.findAllByTagIds(criteria.getTagIds(), pageable);
+        } else {
+            return repository.findAllByTagName(criteria.getTagName(), pageable);
+        }
     }
 
     private Image find(Integer id) {

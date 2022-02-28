@@ -1,6 +1,7 @@
 package com.example.cms.controller.admin;
 
 import com.example.cms.annotation.AdminLogin;
+import com.example.cms.controller.criteria.ImageCriteria;
 import com.example.cms.dto.ImageDto;
 import com.example.cms.service.ImageService;
 import com.example.cms.storage.entity.Image;
@@ -55,13 +56,12 @@ public class ImageController {
     }
 
     /**
-     * todo: filter by tagId (join tables)
      * @param pageable
      * @return
      */
     @GetMapping
-    public Page<Image> list(Pageable pageable) {
-        return service.list(pageable);
+    public Page<Image> list(ImageCriteria criteria, Pageable pageable) {
+        return service.list(criteria, pageable);
     }
 
 }
