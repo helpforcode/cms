@@ -55,7 +55,6 @@ public class ImageController {
     }
 
     /**
-     * todo: return ImageVo
      * todo: filter by tagId (join tables)
      * @param pageable
      * @return

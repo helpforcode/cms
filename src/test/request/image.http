@@ -1,7 +1,7 @@
 ###
 GET {{host}}/admin/image?page=1&size=10&sort=id,desc
 ###
-GET {{host}}/admin/image/10
+GET {{host}}/admin/image/4
 token: {{auth_token}}
 
 ###
@@ -27,10 +27,10 @@ token: {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "fluffy",
-  "tagIds": [2, 3]
+  "name": "fluffy2",
+  "tagIds": [6]
 }
 
 ###
-DELETE {{host}}/admin/image/5
+DELETE {{host}}/admin/image/3
 token: {{auth_token}}

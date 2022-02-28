@@ -4,12 +4,12 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.ManyToAny;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Accessors(chain = true)
 @Data
@@ -25,4 +25,13 @@ public class Image {
     private String url;
     private Long size;
     private Date created;
+
+    @ManyToMany
+    @JoinTable(
+            name = "img_tag",
+            joinColumns = @JoinColumn(name="img_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
+
+    )
+    private List<Tag> tags;
 }

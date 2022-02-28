@@ -4,9 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.example.cms.dto.ImageDto;
-import com.example.cms.dto.ImgTagDto;
 import com.example.cms.storage.entity.Image;
-import com.example.cms.storage.entity.ImgTag;
 import com.example.cms.storage.entity.Tag;
 import com.example.cms.storage.repository.ImageRepository;
 import com.example.cms.vo.ImageVo;
@@ -25,11 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class ImageService {
@@ -39,8 +33,6 @@ public class ImageService {
     @Value("${cms.image.host}")
     private String imageHost;
 
-    @Autowired
-    private ImgTagService imgTagService;
     @Autowired
     private TagService tagService;
     @Autowired
@@ -90,7 +82,7 @@ public class ImageService {
         return repository.findAll(pageable);
     }
 
-    public Image find(Integer id) {
+    private Image find(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -99,13 +91,7 @@ public class ImageService {
         if (Objects.isNull(image)) {
             return null;
         }
-        ImageVo imageVo = mapperFacade.map(image, ImageVo.class);
-        List<ImgTag> imgTags = imgTagService.findByImg(id);
-        if (CollectionUtil.isNotEmpty(imgTags)) {
-            List<Tag> tags = tagService.findByIds(imgTags.stream().map(ImgTag::getTagId).collect(Collectors.toSet()));
-            imageVo.setTags(mapperFacade.mapAsList(tags, ImageVo.Tag.class));
-        }
-        return imageVo;
+        return mapperFacade.map(image, ImageVo.class);
     }
 
     public Image add(ImageDto dto) {
@@ -117,7 +103,6 @@ public class ImageService {
     public void del(Integer id) throws IOException {
         Image image = find(id);
         repository.deleteById(id);
-        imgTagService.delByImgId(id);
         removeImage(image);
     }
 
@@ -132,16 +117,29 @@ public class ImageService {
         if (Objects.isNull(model)) {
             return;
         }
-        // update tags
-        imgTagService.delByImgId(model.getId());
-        if (!CollectionUtils.isEmpty(dto.getTagIds())) {
-            ImgTagDto imgTagDto = new ImgTagDto()
-                    .setImgId(model.getId())
-                    .setTagIds(dto.getTagIds());
-            imgTagService.add(imgTagDto);
+
+        if (StringUtils.hasLength(dto.getName())) {
+            model.setName(dto.getName());
         }
 
-        mapperFacade.map(dto, model);
+        if (!CollectionUtils.isEmpty(dto.getTagIds())) {
+            List<Tag> tags = new ArrayList<>();
+            for (Integer tagId : dto.getTagIds()) {
+                Tag tag = tagService.find(tagId);
+                tags.add(tag);
+            }
+            model.setTags(tags);
+        }
+
+        // update tags
+        // imgTagService.delByImgId(model.getId());
+        // if (!CollectionUtils.isEmpty(dto.getTagIds())) {
+        //     ImgTagDto imgTagDto = new ImgTagDto()
+        //             .setImgId(model.getId())
+        //             .setTagIds(dto.getTagIds());
+        //     imgTagService.add(imgTagDto);
+        // }
+
         repository.save(model);
     }
 

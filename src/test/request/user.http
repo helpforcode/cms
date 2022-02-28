@@ -2,8 +2,8 @@ POST {{host}}/admin/user/login?what=ever
 Content-Type: application/json
 
 {
-  "username": "d",
-  "password": "k"
+  "username": "dogy",
+  "password": "123"
 }
 
 > {% client.global.set("auth_token", response.body.data); %}
