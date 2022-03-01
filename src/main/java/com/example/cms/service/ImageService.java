@@ -60,7 +60,7 @@ public class ImageService {
         ImageDto dto = new ImageDto();
         dto.setName(fileName);
         dto.setPath(path.toString());
-        dto.setUrl(getUrl(relativePath));
+        dto.setUrl(relativePath);
         dto.setSize(file.getSize());
         return add(dto);
     }
@@ -77,7 +77,7 @@ public class ImageService {
         return UUID.randomUUID() + ext;
     }
 
-    private String getUrl(String relativePath) {
+    public String getFullUrl(String relativePath) {
         return String.format("%s%s", imageHost, relativePath);
     }
 

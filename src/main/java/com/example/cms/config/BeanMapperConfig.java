@@ -11,14 +11,26 @@ import com.example.cms.storage.entity.Article;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.storage.entity.Image;
 import com.example.cms.storage.entity.Menu;
+import com.example.cms.vo.ArticleVo;
+import com.example.cms.vo.ImageVo;
+import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Configuration
 public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
+    @Autowired
+    private CmsProperties cmsProperties;
 
     @Override
     public void configure(MapperFactory factory) {
@@ -69,6 +81,39 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
 
                 })
                 .mapNulls(false)
+                .byDefault().register();
+
+        factory.classMap(Image.class, ImageVo.class)
+                .customize(new CustomMapper<Image, ImageVo>() {
+                    @Override
+                    public void mapAtoB(Image from, ImageVo to, MappingContext context) {
+                        to.setRelativeUrl(from.getUrl());
+                        to.setUrl(cmsProperties.getFullUrl(from.getUrl()));
+                    }
+                })
+                .mapNulls(false)
+                .exclude("url")
+                .byDefault().register();
+
+        factory.classMap(Article.class, ArticleVo.class)
+                .customize(new CustomMapper<Article, ArticleVo>() {
+                    @Override
+                    public void mapAtoB(Article from, ArticleVo to, MappingContext context) {
+                        String images = from.getImages();
+                        List<String> fullUrls = new ArrayList<>();
+                        if (StringUtils.hasLength(images)) {
+                            try {
+                                List<String> relativeUrls = JSON.parseArray(images, String.class);
+                                fullUrls = relativeUrls.stream().map(url -> cmsProperties.getFullUrl(url)).collect(Collectors.toList());
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                        }
+                        to.setImages(fullUrls);
+                    }
+                })
+                .mapNulls(false)
+                .exclude("images")
                 .byDefault().register();
     }
 }

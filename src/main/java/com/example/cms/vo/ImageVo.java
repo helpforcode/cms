@@ -10,6 +10,7 @@ public class ImageVo {
     private Integer id;
     private String name;
     private String url;
+    private String relativeUrl;
     private List<Tag> tags;
 }
 
