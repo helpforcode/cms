@@ -3,7 +3,6 @@ package com.example.cms.controller.admin;
 import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.ArticleDto;
 import com.example.cms.service.ArticleService;
-import com.example.cms.storage.entity.Article;
 import com.example.cms.util.PageUtil;
 import com.example.cms.vo.ArticleVo;
 import ma.glasnost.orika.MapperFacade;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/admin/article")
 public class ArticleController {
@@ -37,7 +35,7 @@ public class ArticleController {
 
     @AdminLogin
     @PutMapping("/{id}")
-    public void update(@PathVariable Integer id, ArticleDto dto) {
+    public void update(@PathVariable Integer id, @RequestBody ArticleDto dto) {
         dto.setId(id);
         service.update(dto);
     }

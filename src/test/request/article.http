@@ -1,5 +1,5 @@
 ###
-GET {{host}}/admin/article?page=1&size=10&sort=id,desc
+GET {{host}}/admin/article?page=1&size=20&sort=id,asc
 ###
 GET {{host}}/admin/article/1
 token: {{auth_token}}

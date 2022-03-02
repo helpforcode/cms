@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// @CrossOrigin({"localhost"})
-@CrossOrigin
 @RestController
 @RequestMapping("/admin/user")
 public class UserController {
