@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class WordService {
@@ -20,8 +22,8 @@ public class WordService {
     @Autowired
     private WordRepository repository;
 
-    public Page<Word> list(Pageable pageable) {
-        return repository.findAll(pageable);
+    public List<Word> list() {
+        return repository.findAll();
     }
 
     public Word find(Integer id) {
@@ -45,5 +47,8 @@ public class WordService {
         repository.save(model);
     }
 
+    public List<Word> words(Set<Integer> ids) {
+        return repository.findAllById(ids);
+    }
 
 }

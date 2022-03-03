@@ -4,6 +4,7 @@ import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.DailyWordDto;
 import com.example.cms.service.DailyWordService;
 import com.example.cms.storage.entity.DailyWord;
+import com.example.cms.vo.DailyWordVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ public class DailyWordController {
 
     @AdminLogin
     @PostMapping
-    public void add(DailyWordDto dto) {
+    public void add(DailyWordDto dto) throws Exception {
         service.add(dto);
     }
 
@@ -36,12 +37,18 @@ public class DailyWordController {
 
     @AdminLogin
     @GetMapping("/{id}")
-    public DailyWord find(@PathVariable Integer id) {
-        return service.find(id);
+    public DailyWordVo find(@PathVariable Integer id) {
+        return service.getVo(id);
+    }
+
+    @AdminLogin
+    @GetMapping("/latest")
+    public DailyWordVo latest() {
+        return service.latest();
     }
 
     @GetMapping
-    public Page<DailyWord> list(Pageable pageable) {
+    public Page<DailyWordVo> list(Pageable pageable) {
         return service.list(pageable);
     }
 

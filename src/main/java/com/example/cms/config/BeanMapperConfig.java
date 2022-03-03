@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -54,8 +55,10 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                 .customize(new CustomMapper<DailyWordDto, DailyWord>() {
                     @Override
                     public void mapAtoB(DailyWordDto from, DailyWord to, MappingContext context) {
-                        to.setPublishedAt(DateUtil.parse(from.getPublishedAt(),
-                                DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN));
+                        if (Objects.nonNull(from.getPublishedAt())) {
+                            to.setPublishedAt(DateUtil.parse(from.getPublishedAt(),
+                                    DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN, DatePattern.NORM_DATETIME_MINUTE_PATTERN));
+                        }
                     }
 
                 })

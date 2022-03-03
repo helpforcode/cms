@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/word")
 public class WordController {
@@ -41,8 +43,8 @@ public class WordController {
     }
 
     @GetMapping
-    public Page<Word> list(Pageable pageable) {
-        return service.list(pageable);
+    public List<Word> list() {
+        return service.list();
     }
 
 }

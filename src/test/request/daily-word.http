@@ -2,11 +2,19 @@
 GET {{host}}/admin/daily-word?page=1&size=10&sort=id,desc
 
 ###
+GET {{host}}/admin/daily-word/latest
+token: {{auth_token}}
+
+###
+GET {{host}}/admin/daily-word/1
+token: {{auth_token}}
+
+###
 POST {{host}}/admin/daily-word
 token: {{auth_token}}
 Content-Type: application/x-www-form-urlencoded
 
-words=1,2&wordPrimary=3&publishedAt=2022-02-11
+words=1,3,4&wordPrimary=2&publishedAt=2022-03-01
 
 ###
 DELETE {{host}}/admin/daily-word/2
@@ -20,4 +28,4 @@ PUT {{host}}/admin/daily-word/1
 token: {{auth_token}}
 Content-Type: application/x-www-form-urlencoded
 
-words=2,3&wordPrimary=1&publishedAt=2022-02-12
+status=1

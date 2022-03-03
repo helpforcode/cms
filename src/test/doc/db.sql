@@ -90,3 +90,9 @@ create table img_tag
     constraint tag_pk
         primary key (id)
 );
+
+alter table daily_word
+    add day varchar(20) default '' not null;
+create unique index daily_word_day_uindex
+    on daily_word (day);
+

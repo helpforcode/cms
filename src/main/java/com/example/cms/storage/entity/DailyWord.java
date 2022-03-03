@@ -21,5 +21,6 @@ public class DailyWord {
     private String words;
     private Integer wordPrimary;
     private Date publishedAt;
+    private String day;
     private Integer status;
 }
