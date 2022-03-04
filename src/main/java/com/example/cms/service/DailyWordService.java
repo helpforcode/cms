@@ -2,8 +2,7 @@ package com.example.cms.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.example.cms.dto.DailyWordDto;
-import com.example.cms.dto.WordDto;
+import com.example.cms.dto.DailyWordReq;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.storage.entity.Word;
 import com.example.cms.storage.repository.DailyWordRepository;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,31 +73,49 @@ public class DailyWordService {
         return repository.findById(id).orElse(null);
     }
 
-    public void add(DailyWordDto dto) throws Exception {
-        DailyWord model = mapperFacade.map(dto, DailyWord.class);
-        if (repository.findFirstByPublishedAtAfter(new Date()) != null) {
-            throw new Exception("Existed");
+    public void add(DailyWordReq req) throws Exception {
+        if (!StringUtils.hasLength(req.getDay())) {
+            throw new Exception("Date should be provided");
         }
-        String day = DateUtil.format(model.getPublishedAt(), DatePattern.NORM_DATE_PATTERN);
-        if (null != repository.findFirstByDay(day)) {
+        DailyWord model = new DailyWord();
+        attachModel(model, req);
+        DailyWord existed = repository.findFirstByPublishedAtAfter(new Date());
+        if (existed != null) {
+            throw new Exception("Existed " + existed.getDay());
+        }
+        if (null != repository.findFirstByDay(req.getDay())) {
             throw new Exception("Existed.");
         }
-        model.setDay(day);
         repository.save(model);
     }
 
     public void del(Integer id) {
     }
 
-    public void update(DailyWordDto dto) {
-        DailyWord model = repository.findById(dto.getId()).orElse(null);
+    public void update(DailyWordReq req) {
+        DailyWord model = repository.findById(req.getId()).orElse(null);
         if (Objects.isNull(model)) {
             return;
         }
-        mapperFacade.map(dto, model);
-        model.setDay(DateUtil.format(model.getPublishedAt(), DatePattern.NORM_DATE_PATTERN));
+        attachModel(model, req);
         repository.save(model);
     }
 
+    private void attachModel(DailyWord model, DailyWordReq req) {
+        if (null != req.getWords()) {
+            List<String> wordIds = req.getWords().stream().map(word -> String.valueOf(word.getId())).collect(Collectors.toList());
+            model.setWords(String.join(",", wordIds));
+        }
+        if (null != req.getPrimaryWord()) {
+            model.setWordPrimary(req.getPrimaryWord().getId());
+        }
+        if (null != req.getStatus()) {
+            model.setStatus(req.getStatus());
+        }
+        if (StringUtils.hasLength(req.getDay())) {
+            model.setDay(req.getDay());
+            model.setPublishedAt(DateUtil.parse(req.getDay(), DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN));
+        }
+    }
 
 }

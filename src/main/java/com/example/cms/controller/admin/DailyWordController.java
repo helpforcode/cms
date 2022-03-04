@@ -2,6 +2,7 @@ package com.example.cms.controller.admin;
 
 import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.DailyWordDto;
+import com.example.cms.dto.DailyWordReq;
 import com.example.cms.service.DailyWordService;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.vo.DailyWordVo;
@@ -18,8 +19,8 @@ public class DailyWordController {
 
     @AdminLogin
     @PostMapping
-    public void add(DailyWordDto dto) throws Exception {
-        service.add(dto);
+    public void add(@RequestBody DailyWordReq req) throws Exception {
+        service.add(req);
     }
 
     @AdminLogin
@@ -30,9 +31,9 @@ public class DailyWordController {
 
     @AdminLogin
     @PutMapping("/{id}")
-    public void update(@PathVariable Integer id, DailyWordDto dto) {
-        dto.setId(id);
-        service.update(dto);
+    public void update(@PathVariable Integer id, @RequestBody DailyWordReq req) {
+        req.setId(id);
+        service.update(req);
     }
 
     @AdminLogin

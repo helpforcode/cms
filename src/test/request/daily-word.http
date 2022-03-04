@@ -1,5 +1,5 @@
 ###
-GET {{host}}/admin/daily-word?page=1&size=10&sort=id,desc
+GET {{host}}/admin/daily-word?page=1&size=10&sort=day,desc
 
 ###
 GET {{host}}/admin/daily-word/latest
@@ -12,9 +12,20 @@ token: {{auth_token}}
 ###
 POST {{host}}/admin/daily-word
 token: {{auth_token}}
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-words=1,3,4&wordPrimary=2&publishedAt=2022-03-01
+{
+  "primaryWord": {
+    "id": 2
+  },
+  "words": [
+    {"id": 1}
+    ,{"id": 3}
+    ,{"id": 4}
+    ,{"id": 5}
+  ],
+  "day": "2022-03-09"
+}
 
 ###
 DELETE {{host}}/admin/daily-word/2
@@ -24,8 +35,19 @@ Content-Type: application/x-www-form-urlencoded
 ###
 
 ###
-PUT {{host}}/admin/daily-word/1
+PUT {{host}}/admin/daily-word/3
 token: {{auth_token}}
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-status=1
+{
+  "primaryWord": {
+    "id": 2
+  },
+  "words": [
+    {"id": 1}
+  ,{"id": 3}
+  ,{"id": 4}
+  ,{"id": 5}
+  ],
+  "day": "2022-02-09"
+}
