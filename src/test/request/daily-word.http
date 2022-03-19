@@ -4,6 +4,12 @@ GET {{host}}/admin/daily-word?page=1&size=10&sort=day,desc
 ###
 GET {{host}}/admin/daily-word/latest
 token: {{auth_token}}
+###
+GET {{host}}/admin/daily-word/next
+token: {{auth_token}}
+###
+GET {{host}}/daily-word/latest
+token: {{auth_token}}
 
 ###
 GET {{host}}/admin/daily-word/1
@@ -16,15 +22,17 @@ Content-Type: application/json
 
 {
   "primaryWord": {
-    "id": 2
+    "id":22
   },
   "words": [
     {"id": 1}
     ,{"id": 3}
     ,{"id": 4}
     ,{"id": 5}
+    ,{"id": 12}
+    ,{"id": 19}
   ],
-  "day": "2022-03-09"
+  "day": "2022-03-20"
 }
 
 ###
@@ -50,4 +58,13 @@ Content-Type: application/json
   ,{"id": 5}
   ],
   "day": "2022-02-09"
+}
+
+###
+PUT {{host}}/admin/daily-word/2
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "status": 1
 }

@@ -1,16 +1,22 @@
 package com.example.cms.service;
 
 import com.example.cms.dto.ArticleDto;
-import com.example.cms.dto.CategoryDto;
 import com.example.cms.storage.entity.Article;
+import com.example.cms.storage.entity.Category;
 import com.example.cms.storage.repository.ArticleRepository;
+import com.example.cms.vo.ArticleGroup;
+import com.example.cms.vo.ArticleRow;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -20,6 +26,29 @@ public class ArticleService {
 
     @Autowired
     private ArticleRepository repository;
+    @Autowired
+    private CategoryService categoryService;
+
+    public List<ArticleGroup> group() {
+        List<Category> categories = categoryService.availableCate();
+        // manual control, instead of automatically off by time.
+        List<Article> articles = availableArticles();
+
+        Map<Integer, List<Article>> articleMap = articles.stream().collect(Collectors.groupingBy(Article::getCategoryId));
+
+        return categories.stream().map(category -> {
+            ArticleGroup group = new ArticleGroup();
+            group.setCategoryId(category.getId());
+            group.setCategoryCode(category.getCode());
+            group.setCategoryName(category.getName());
+            group.setArticles(mapperFacade.mapAsList(articleMap.getOrDefault(category.getId(), Collections.emptyList()), ArticleRow.class));
+            return group;
+        }).collect(Collectors.toList());
+    }
+
+    private List<Article> availableArticles() {
+        return repository.findAllByDisplayEquals(true);
+    }
 
     public Page<Article> list(Pageable pageable) {
         return repository.findAll(pageable);

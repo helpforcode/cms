@@ -34,8 +34,15 @@ public class DailyWordService {
     private DailyWord latestPublished() {
         return repository.findFirstByStatusEqualsOrderByPublishedAtDesc(1);
     }
+    private DailyWord nextToBePublish() {
+        return repository.findFirstByStatusEqualsAndPublishedAtGreaterThanOrderByPublishedAtDesc(0, new Date());
+    }
     public DailyWordVo latest() {
         DailyWord dailyWord = latestPublished();
+        return getVo(dailyWord);
+    }
+    public DailyWordVo next() {
+        DailyWord dailyWord = nextToBePublish();
         return getVo(dailyWord);
     }
 
@@ -47,15 +54,11 @@ public class DailyWordService {
         Set<Integer> wordIds = Arrays.stream(words.split(",")).map(Integer::valueOf).collect(Collectors.toSet());
         Integer primary = dailyWord.getWordPrimary();
 
+        DailyWordVo vo = mapperFacade.map(dailyWord, DailyWordVo.class);
+
         Word primaryWord = wordService.find(primary);
-        DailyWordVo vo = new DailyWordVo();
         vo.setPrimaryWord(primaryWord);
         vo.setWords(wordService.words(wordIds));
-
-        vo.setId(dailyWord.getId());
-        vo.setStatus(dailyWord.getStatus());
-        vo.setPublishedAt(dailyWord.getPublishedAt());
-        vo.setDay(dailyWord.getDay());
         return vo;
     }
 

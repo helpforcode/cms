@@ -96,3 +96,7 @@ alter table daily_word
 create unique index daily_word_day_uindex
     on daily_word (day);
 
+alter table daily_word
+    add code int default 0 not null;
+
+# update daily_word set code = id;

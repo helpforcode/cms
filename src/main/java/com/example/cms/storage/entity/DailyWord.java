@@ -23,4 +23,5 @@ public class DailyWord {
     private Date publishedAt;
     private String day;
     private Integer status;
+    private Integer code;
 }

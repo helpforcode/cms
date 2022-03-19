@@ -6,6 +6,7 @@ import java.util.Date;
 
 public interface DailyWordRepository extends BaseRepository<DailyWord> {
     DailyWord findFirstByStatusEqualsOrderByPublishedAtDesc(Integer status);
+    DailyWord findFirstByStatusEqualsAndPublishedAtGreaterThanOrderByPublishedAtDesc(Integer status, Date now);
     DailyWord findFirstByDay(String day);
     DailyWord findFirstByPublishedAtAfter(Date date);
 }

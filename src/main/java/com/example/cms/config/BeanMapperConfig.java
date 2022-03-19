@@ -2,6 +2,7 @@ package com.example.cms.config;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.example.cms.dto.ArticleDto;
 import com.example.cms.dto.DailyWordDto;
@@ -11,7 +12,9 @@ import com.example.cms.storage.entity.Article;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.storage.entity.Image;
 import com.example.cms.storage.entity.Menu;
+import com.example.cms.vo.ArticleAdminVo;
 import com.example.cms.vo.ArticleVo;
+import com.example.cms.vo.DailyWordVo;
 import com.example.cms.vo.ImageVo;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.CustomMapper;
@@ -117,6 +120,39 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                 })
                 .mapNulls(false)
                 .exclude("images")
+                .byDefault().register();
+
+        factory.classMap(Article.class, ArticleAdminVo.class)
+                .customize(new CustomMapper<Article, ArticleAdminVo>() {
+                    @Override
+                    public void mapAtoB(Article from, ArticleAdminVo to, MappingContext context) {
+                        String images = from.getImages();
+                        List<String> relativeUrls = new ArrayList<>();
+                        if (StringUtils.hasLength(images)) {
+                            try {
+                                relativeUrls = JSON.parseArray(images, String.class);
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                        }
+                        to.setImages(relativeUrls);
+                    }
+                })
+                .mapNulls(false)
+                .exclude("images")
+                .byDefault().register();
+
+
+        factory.classMap(DailyWord.class, DailyWordVo.class)
+                .customize(new CustomMapper<DailyWord, DailyWordVo>() {
+                    @Override
+                    public void mapAtoB(DailyWord from, DailyWordVo to, MappingContext context) {
+                        to.setCode(StrUtil.fillBefore(from.getCode().toString(), '0', 3));
+                    }
+                })
+                .exclude("code")
+                .exclude("words")
+                .mapNulls(false)
                 .byDefault().register();
     }
 }

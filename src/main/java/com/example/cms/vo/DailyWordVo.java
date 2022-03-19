@@ -14,4 +14,5 @@ public class DailyWordVo {
     private Date publishedAt;
     private String day;
     private Integer status;
+    private String code;
 }

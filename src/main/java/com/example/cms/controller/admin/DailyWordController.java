@@ -48,6 +48,12 @@ public class DailyWordController {
         return service.latest();
     }
 
+    @AdminLogin
+    @GetMapping("/next")
+    public DailyWordVo next() {
+        return service.next();
+    }
+
     @GetMapping
     public Page<DailyWordVo> list(Pageable pageable) {
         return service.list(pageable);

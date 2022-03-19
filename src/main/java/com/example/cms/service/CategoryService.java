@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,6 +16,10 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository repository;
+
+    public List<Category> availableCate() {
+        return repository.findAllByDisplayEquals(true);
+    }
 
     public Page<Category> list(Pageable pageable) {
         return repository.findAll(pageable);
