@@ -11,5 +11,5 @@ public class DailyWordDto {
     private String words;
     private String wordPrimary;
     private String publishedAt;
-    private Integer status;
+    private Boolean status;
 }

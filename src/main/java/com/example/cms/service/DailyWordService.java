@@ -32,10 +32,10 @@ public class DailyWordService {
     private PageUtil pageUtil;
 
     private DailyWord latestPublished() {
-        return repository.findFirstByStatusEqualsOrderByPublishedAtDesc(1);
+        return repository.findFirstByStatusEqualsOrderByPublishedAtDesc(true);
     }
     private DailyWord nextToBePublish() {
-        return repository.findFirstByStatusEqualsAndPublishedAtGreaterThanOrderByPublishedAtDesc(0, new Date());
+        return repository.findFirstByStatusEqualsAndPublishedAtGreaterThanOrderByPublishedAtDesc(false, new Date());
     }
     public DailyWordVo latest() {
         DailyWord dailyWord = latestPublished();

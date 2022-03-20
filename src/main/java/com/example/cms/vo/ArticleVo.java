@@ -14,5 +14,5 @@ public class ArticleVo {
     private String link;
     private String content;
     private Boolean display;
-    private Date publishedAt;
+    private String publishedAt;
 }

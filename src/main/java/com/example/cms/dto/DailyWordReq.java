@@ -14,5 +14,5 @@ public class DailyWordReq {
     private Word primaryWord;
     private List<Word> words;
     private String day;
-    private Integer status;
+    private Boolean status;
 }

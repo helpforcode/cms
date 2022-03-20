@@ -116,10 +116,12 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                             }
                         }
                         to.setImages(fullUrls);
+                        to.setPublishedAt(DateUtil.format(from.getPublishedAt(), DatePattern.NORM_DATE_PATTERN));
                     }
                 })
                 .mapNulls(false)
                 .exclude("images")
+                .exclude("publishedAt")
                 .byDefault().register();
 
         factory.classMap(Article.class, ArticleAdminVo.class)
@@ -136,10 +138,12 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                             }
                         }
                         to.setImages(relativeUrls);
+                        to.setPublishedAt(DateUtil.format(from.getPublishedAt(), DatePattern.NORM_DATE_PATTERN));
                     }
                 })
                 .mapNulls(false)
                 .exclude("images")
+                .exclude("publishedAt")
                 .byDefault().register();
 
 

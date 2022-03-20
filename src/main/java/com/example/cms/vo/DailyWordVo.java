@@ -13,6 +13,6 @@ public class DailyWordVo {
     private List<Word> words;
     private Date publishedAt;
     private String day;
-    private Integer status;
+    private Boolean status;
     private String code;
 }
