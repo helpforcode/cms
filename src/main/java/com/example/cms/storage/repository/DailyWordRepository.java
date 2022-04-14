@@ -9,4 +9,5 @@ public interface DailyWordRepository extends BaseRepository<DailyWord> {
     DailyWord findFirstByStatusEqualsAndPublishedAtGreaterThanOrderByPublishedAtDesc(Boolean status, Date now);
     DailyWord findFirstByDay(String day);
     DailyWord findFirstByPublishedAtAfter(Date date);
+    DailyWord findFirstByOrderByCodeDesc();
 }

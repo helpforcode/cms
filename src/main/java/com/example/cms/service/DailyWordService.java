@@ -3,6 +3,7 @@ package com.example.cms.service;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.example.cms.dto.DailyWordReq;
+import com.example.cms.dto.HistoryReq;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.storage.entity.Word;
 import com.example.cms.storage.repository.DailyWordRepository;
@@ -69,6 +70,11 @@ public class DailyWordService {
         return pageUtil.listToPage(vos, page);
     }
 
+    public List<DailyWordVo> all(HistoryReq req) {
+        // todo: query
+        return repository.findAll().stream().map(this::getVo).collect(Collectors.toList());
+    }
+
     public DailyWordVo getVo(Integer id) {
         return getVo(find(id));
     }
@@ -88,6 +94,10 @@ public class DailyWordService {
         }
         if (null != repository.findFirstByDay(req.getDay())) {
             throw new Exception("Existed.");
+        }
+        DailyWord last = repository.findFirstByOrderByCodeDesc();
+        if (null != last) {
+            model.setCode(last.getCode() + 1);
         }
         repository.save(model);
     }

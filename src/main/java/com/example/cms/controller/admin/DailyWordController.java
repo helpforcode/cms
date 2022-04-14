@@ -3,6 +3,7 @@ package com.example.cms.controller.admin;
 import com.example.cms.annotation.AdminLogin;
 import com.example.cms.dto.DailyWordDto;
 import com.example.cms.dto.DailyWordReq;
+import com.example.cms.dto.HistoryReq;
 import com.example.cms.service.DailyWordService;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.vo.DailyWordVo;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/daily-word")
@@ -58,5 +61,11 @@ public class DailyWordController {
     public Page<DailyWordVo> list(Pageable pageable) {
         return service.list(pageable);
     }
+
+    @GetMapping("/all")
+    public List<DailyWordVo> all(HistoryReq req) {
+        return service.all(req);
+    }
+
 
 }
