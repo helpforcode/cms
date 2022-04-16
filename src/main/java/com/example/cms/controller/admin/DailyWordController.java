@@ -1,6 +1,7 @@
 package com.example.cms.controller.admin;
 
 import com.example.cms.annotation.AdminLogin;
+import com.example.cms.cache.DailyWordCache;
 import com.example.cms.dto.DailyWordDto;
 import com.example.cms.dto.DailyWordReq;
 import com.example.cms.dto.HistoryReq;
@@ -19,6 +20,8 @@ import java.util.List;
 public class DailyWordController {
     @Autowired
     private DailyWordService service;
+    @Autowired
+    private DailyWordCache cache;
 
     @AdminLogin
     @PostMapping
@@ -63,8 +66,8 @@ public class DailyWordController {
     }
 
     @GetMapping("/all")
-    public List<DailyWordVo> all(HistoryReq req) {
-        return service.all(req);
+    public List<DailyWordVo> all(String year) {
+        return cache.all(year);
     }
 
 

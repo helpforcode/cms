@@ -1,5 +1,6 @@
 package com.example.cms.service;
 
+import com.example.cms.cache.WordCache;
 import com.example.cms.dto.WordDto;
 import com.example.cms.storage.entity.Word;
 import com.example.cms.storage.repository.WordRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +29,7 @@ public class WordService {
     }
 
     public Word find(Integer id) {
-        return repository.findById(id).orElse(null);
+        return cache.getWord(id);
     }
 
     public void add(WordDto dto) {
@@ -47,8 +49,15 @@ public class WordService {
         repository.save(model);
     }
 
+    @Autowired
+    private WordCache cache;
+
     public List<Word> words(Set<Integer> ids) {
-        return repository.findAllById(ids);
+        List<Word> words = new ArrayList<>();
+        for (Integer id : ids) {
+            words.add(cache.getWord(id));
+        }
+        return words;
     }
 
 }

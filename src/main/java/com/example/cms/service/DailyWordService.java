@@ -11,6 +11,7 @@ import com.example.cms.util.PageUtil;
 import com.example.cms.vo.DailyWordVo;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class DailyWordService {
     @Autowired
     private PageUtil pageUtil;
 
+    private static final int publishHour = 21;
+
     private DailyWord latestPublished() {
         return repository.findFirstByStatusEqualsOrderByPublishedAtDesc(true);
     }
@@ -47,7 +50,7 @@ public class DailyWordService {
         return getVo(dailyWord);
     }
 
-    private DailyWordVo getVo(DailyWord dailyWord) {
+    public DailyWordVo getVo(DailyWord dailyWord) {
         if (null == dailyWord) {
             return null;
         }
@@ -70,9 +73,13 @@ public class DailyWordService {
         return pageUtil.listToPage(vos, page);
     }
 
-    public List<DailyWordVo> all(HistoryReq req) {
-        // todo: query
-        return repository.findAll().stream().map(this::getVo).collect(Collectors.toList());
+    // todo: cache refresh when status up (schedule)
+    @Cacheable(cacheNames = "dailyWords", key = "#year")
+    public List<DailyWordVo> all(String year) {
+        if (!StringUtils.hasLength(year)) {
+            year = String.valueOf(DateUtil.year(new Date()));
+        }
+        return repository.findAllByDayStartsWithOrderByIdDesc(year).stream().map(this::getVo).collect(Collectors.toList());
     }
 
     public DailyWordVo getVo(Integer id) {
@@ -95,9 +102,11 @@ public class DailyWordService {
         if (null != repository.findFirstByDay(req.getDay())) {
             throw new Exception("Existed.");
         }
-        DailyWord last = repository.findFirstByOrderByCodeDesc();
+        DailyWord last = repository.findFirstByDayStartsWithOrderByCodeDesc(model.getDay().substring(0, 4));
         if (null != last) {
             model.setCode(last.getCode() + 1);
+        } else {
+            model.setCode(1);
         }
         repository.save(model);
     }
@@ -127,7 +136,9 @@ public class DailyWordService {
         }
         if (StringUtils.hasLength(req.getDay())) {
             model.setDay(req.getDay());
-            model.setPublishedAt(DateUtil.parse(req.getDay(), DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN));
+            model.setPublishedAt(DateUtil.offsetHour(
+                    DateUtil.parse(req.getDay(), DatePattern.NORM_DATE_PATTERN, DatePattern.NORM_DATETIME_PATTERN)
+                    , publishHour));
         }
     }
 

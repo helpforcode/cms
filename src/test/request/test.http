@@ -26,3 +26,16 @@ username=dogy&password=123
 ###
 GET {{host}}/user/test
 token: {{auth_token}}
+
+###
+GET {{host}}/redis/value
+
+###
+GET {{host}}/admin/test?year=2022
+token: {{auth_token}}
+###
+GET {{host}}/cache/cache-words
+token: {{auth_token}}
+###
+GET {{host}}/cache/get-word?id=1
+token: {{auth_token}}

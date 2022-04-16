@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/word")
@@ -45,6 +46,13 @@ public class WordController {
     @GetMapping
     public List<Word> list() {
         return service.list();
+    }
+
+
+    @GetMapping("/distinct")
+    public List<String> distinct() {
+        List<Word> words = service.list();
+        return words.stream().map(Word::getWord).distinct().collect(Collectors.toList());
     }
 
 }

@@ -1,4 +1,6 @@
 GET {{host}}/admin/word?page=1&size=10&sort=id,desc
+###
+GET {{host}}/admin/word/distinct
 
 ###
 POST {{host}}/admin/word
