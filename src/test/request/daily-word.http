@@ -68,3 +68,6 @@ Content-Type: application/json
 {
   "status": 1
 }
+
+###
+GET {{host}}/admin/daily-word/all?year=2022
