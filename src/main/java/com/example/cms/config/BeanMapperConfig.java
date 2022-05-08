@@ -4,14 +4,8 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.example.cms.dto.ArticleDto;
-import com.example.cms.dto.DailyWordDto;
-import com.example.cms.dto.ImageDto;
-import com.example.cms.dto.MenuDto;
-import com.example.cms.storage.entity.Article;
-import com.example.cms.storage.entity.DailyWord;
-import com.example.cms.storage.entity.Image;
-import com.example.cms.storage.entity.Menu;
+import com.example.cms.dto.*;
+import com.example.cms.storage.entity.*;
 import com.example.cms.vo.ArticleAdminVo;
 import com.example.cms.vo.ArticleVo;
 import com.example.cms.vo.DailyWordVo;
@@ -156,6 +150,15 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                 })
                 .exclude("code")
                 .exclude("words")
+                .mapNulls(false)
+                .byDefault().register();
+
+        factory.classMap(InfoDto.class, Info.class)
+                .customize(new CustomMapper<InfoDto, Info>() {
+                    @Override
+                    public void mapAtoB(InfoDto from, Info to, MappingContext context) {
+                    }
+                })
                 .mapNulls(false)
                 .byDefault().register();
     }

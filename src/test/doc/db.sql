@@ -100,3 +100,34 @@ alter table daily_word
     add code int default 0 not null;
 
 # update daily_word set code = id;
+
+create table info
+(
+    id int auto_increment,
+    code int default 0 not null,
+    title varchar(20) default '' not null,
+    cate_id int default 0 not null,
+    remark varchar(30) default '' not null,
+    visible bit default 0 not null,
+    state tinyint(1) default 0 not null,
+    update_time timestamp default current_timestamp on update current_timestamp not null,
+    create_time timestamp default current_timestamp not null,
+    constraint info_pk
+        primary key (id)
+);
+create unique index info_code_cate_id_uindex
+	on info (code, cate_id);
+
+
+create table info_cate
+(
+    id int auto_increment,
+    name varchar(50) default '' not null,
+    od int default 0 not null,
+    create_time timestamp default current_timestamp not null,
+    constraint info_cate_pk
+        primary key (id)
+);
+
+
+
