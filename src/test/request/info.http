@@ -1,4 +1,14 @@
 GET {{host}}/admin/info?page=1&size=10&sort=id
+###
+GET {{host}}/admin/info/all
+###
+GET {{host}}/admin/info/cate?page=1&size=10&sort=id
+###
+POST {{host}}/admin/info/cate
+token: {{auth_token}}
+Content-Type: application/x-www-form-urlencoded
+
+name=Sunday&od=2
 
 ###
 POST {{host}}/admin/info
