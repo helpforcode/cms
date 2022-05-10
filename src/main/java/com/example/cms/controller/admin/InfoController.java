@@ -40,7 +40,7 @@ public class InfoController {
     }
 
     @PostMapping
-    public void add(InfoDto info) {
+    public void add(@RequestBody InfoDto info) {
         service.add(info);
     }
 
@@ -50,7 +50,7 @@ public class InfoController {
     }
 
     @PutMapping("/{id}")
-    public void update(InfoDto info, @PathVariable Integer id) {
+    public void update(@RequestBody InfoDto info, @PathVariable Integer id) {
         info.setId(id);
         service.update(info);
     }
@@ -62,12 +62,12 @@ public class InfoController {
 
 
     @PostMapping("/cate")
-    public void addCate(InfoCateDto infoCate) {
+    public void addCate(@RequestBody InfoCateDto infoCate) {
         service.addCate(infoCate);
     }
 
     @PutMapping("/cate/{id}")
-    public void updateCate(InfoCateDto dto, @PathVariable Integer id) {
+    public void updateCate(@RequestBody InfoCateDto dto, @PathVariable Integer id) {
         dto.setId(id);
         service.updateCate(dto);
     }
