@@ -15,6 +15,6 @@ public class InfoController {
 
     @GetMapping
     public List<Info> infoList() {
-        return service.infoList(null);
+        return service.infoList(null, true);
     }
 }

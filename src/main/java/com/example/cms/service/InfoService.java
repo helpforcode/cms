@@ -26,11 +26,19 @@ public class InfoService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Info> infoList(Integer cateId) {
+    public List<Info> infoList(Integer cateId, boolean onlyVisible) {
         if (null != cateId) {
-            return repository.findAllByVisibleEqualsAndCateIdEqualsOrderByCodeDesc(true, cateId);
+            if (onlyVisible) {
+                return repository.findAllByVisibleEqualsAndCateIdEqualsOrderByCodeDesc(true, cateId);
+            } else {
+                return repository.findAllByCateIdEqualsOrderByCodeDesc(cateId);
+            }
         }
-        return repository.findAllByVisibleEqualsOrderByCodeDesc(true);
+        if (onlyVisible) {
+            return repository.findAllByVisibleEqualsOrderByCodeDesc(true);
+        } else {
+            return repository.findAllByOrderByCodeDesc();
+        }
     }
 
     public void add(InfoDto info) {

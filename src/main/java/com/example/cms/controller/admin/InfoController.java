@@ -25,7 +25,7 @@ public class InfoController {
     @GetMapping("/all")
     public List<InfoAll> all() {
         List<InfoCate> cates = service.cateList();
-        List<Info> infos = service.infoList(null);
+        List<Info> infos = service.infoList(null, false);
         Map<Integer, List<Info>> infoMap = infos.stream().collect(Collectors.groupingBy(Info::getCateId));
 
         List<InfoAll> infoAlls = new ArrayList<>();
@@ -46,7 +46,7 @@ public class InfoController {
 
     @GetMapping
     public List<Info> infoList(Integer cateId) {
-        return service.infoList(cateId);
+        return service.infoList(cateId, false);
     }
 
     @PutMapping("/{id}")
