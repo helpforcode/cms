@@ -129,5 +129,45 @@ create table info_cate
         primary key (id)
 );
 
+create table property_type
+(
+    id   int auto_increment,
+    name varchar(20) default '' not null,
+    code varchar(20) default '' not null,
+    constraint property_type_pk
+        primary key (id)
+);
+create unique index property_type_name_uindex
+    on property_type (name);
+
+
+create table property
+(
+    id   int auto_increment,
+    name varchar(10) default '' not null,
+    code varchar(10) default '' not null,
+    constraint property_pk
+        primary key (id)
+);
+alter table property
+    add type_id int default 0 not null;
+
+
+
+create table word_prop
+(
+    id        int auto_increment,
+    word_id   int       default 0                                             not null,
+    prop_type int       default 0                                             not null,
+    prop_id   int       default 0                                             not null,
+    created   timestamp default current_timestamp                             not null,
+    updated   timestamp default current_timestamp on update current_timestamp not null,
+    constraint word_prop_pk
+        primary key (id)
+);
+create unique index word_prop_word_id_prop_type_uindex
+    on word_prop (word_id, prop_type);
+
+
 
 

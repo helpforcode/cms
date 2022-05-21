@@ -161,5 +161,14 @@ public class BeanMapperConfig implements OrikaMapperFactoryConfigurer {
                 })
                 .mapNulls(false)
                 .byDefault().register();
+
+        factory.classMap(PropDto.class, Prop.class)
+                .customize(new CustomMapper<PropDto, Prop>() {
+                    @Override
+                    public void mapAtoB(PropDto from, Prop to, MappingContext context) {
+                    }
+                })
+                .mapNulls(false)
+                .byDefault().register();
     }
 }

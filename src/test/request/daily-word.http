@@ -5,6 +5,9 @@ GET {{host}}/admin/daily-word?page=1&size=10&sort=day,desc
 GET {{host}}/admin/daily-word/latest
 token: {{auth_token}}
 ###
+GET {{host}}/admin/daily-word/latest-code
+token: {{auth_token}}
+###
 GET {{host}}/admin/daily-word/next
 token: {{auth_token}}
 ###

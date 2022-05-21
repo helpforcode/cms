@@ -60,4 +60,17 @@ public class DailyWordCache {
     public void flushAll(String year) {
         redisTemplate.delete(getKey(year));
     }
+
+    public String latestCode() {
+        String key = "dailyWord::latestCode";
+        Object value = redisTemplate.opsForValue().get(key);
+        String code;
+        if (null == value) {
+            code = dailyWordService.latest().getCode();
+            redisTemplate.opsForValue().set(key, code);
+        } else {
+            code = (String) value;
+        }
+        return code;
+    }
 }

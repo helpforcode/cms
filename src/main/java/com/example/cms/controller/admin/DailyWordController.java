@@ -24,6 +24,13 @@ public class DailyWordController {
     private DailyWordCache cache;
 
     @AdminLogin
+    @GetMapping("/latest-code")
+    public String latestCode() {
+        return cache.latestCode();
+    }
+
+
+    @AdminLogin
     @PostMapping
     public void add(@RequestBody DailyWordReq req) throws Exception {
         service.add(req);

@@ -1,0 +1,52 @@
+###
+GET {{host}}/admin/prop
+token: {{auth_token}}
+###
+GET {{host}}/admin/prop/all
+token: {{auth_token}}
+###
+POST {{host}}/admin/prop
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "typeId": "1",
+  "name": "Blue",
+  "code": "B"
+}
+
+###
+PUT {{host}}/admin/prop/1
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "code": "R"
+}
+
+###
+GET {{host}}/admin/prop/type
+token: {{auth_token}}
+###
+POST {{host}}/admin/prop/type
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Color",
+  "code": "color"
+}
+
+###
+GET {{host}}/admin/prop/link
+token: {{auth_token}}
+###
+POST {{host}}/admin/prop/link
+token: {{auth_token}}
+Content-Type: application/json
+
+{
+  "wordId": 2,
+  "propType": 1,
+  "propId":2
+}
