@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -54,6 +55,13 @@ public class DailyWordService {
         if (null == dailyWord) {
             return null;
         }
+        String key = "dailyWordVo::" + dailyWord.getId();
+
+        DailyWordVo dailyWordVo = (DailyWordVo) redisTemplate.opsForValue().get(key);
+        if (null != dailyWordVo) {
+            return dailyWordVo;
+        }
+
         String words = dailyWord.getWords();
         Set<Integer> wordIds = Arrays.stream(words.split(",")).map(Integer::valueOf).collect(Collectors.toSet());
         Integer primary = dailyWord.getWordPrimary();
@@ -63,8 +71,12 @@ public class DailyWordService {
         Word primaryWord = wordService.find(primary);
         vo.setPrimaryWord(primaryWord);
         vo.setWords(wordService.words(wordIds));
+
+        redisTemplate.opsForValue().set(key, vo);
         return vo;
     }
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Page<DailyWordVo> list(Pageable pageable) {
         Page<DailyWord> page =  repository.findAll(pageable);

@@ -1,5 +1,6 @@
 package com.example.cms.cache;
 
+import com.alibaba.fastjson.JSON;
 import com.example.cms.storage.entity.Word;
 import com.example.cms.storage.repository.WordRepository;
 import org.hibernate.annotations.Cache;
@@ -24,10 +25,15 @@ public class WordCache {
     // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     public Word getWord(Integer id) {
         String key = "word::" + id;
-        Word wordCache = (Word) redisTemplate.opsForValue().get(key);
+        String wordJsonCache = (String) redisTemplate.opsForValue().get(key);
+        Word wordCache = JSON.parseObject(wordJsonCache, Word.class);
+
+        // Word wordCache = (Word) redisTemplate.opsForValue().get(key);
         if (null != wordCache) {
             return wordCache;
         }
-        return repository.getById(id);
+        Word word = repository.getById(id);
+        redisTemplate.opsForValue().set(key, JSON.toJSONString(word));
+        return word;
     }
 }

@@ -115,8 +115,6 @@ create table info
     constraint info_pk
         primary key (id)
 );
-create unique index info_code_cate_id_uindex
-	on info (code, cate_id);
 
 
 create table info_cate

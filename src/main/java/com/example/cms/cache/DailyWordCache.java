@@ -2,6 +2,7 @@ package com.example.cms.cache;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.example.cms.service.DailyWordService;
 import com.example.cms.storage.entity.DailyWord;
 import com.example.cms.storage.repository.DailyWordRepository;
@@ -38,22 +39,31 @@ public class DailyWordCache {
         if (!StringUtils.hasLength(year)) {
             year = String.valueOf(DateUtil.year(new Date()));
         }
-        List<DailyWord> dailyWords = new ArrayList<>();
-
         String key = getKey(year);
-        List<Object> dailyWordsCache = redisTemplate.opsForList().range(key, 0, -1);
-        if (CollectionUtil.isEmpty(dailyWordsCache)) {
-            // fetch from db
-            dailyWords = repository.findAllByDayStartsWithOrderByIdDesc(year);
-            // cache
-            redisTemplate.opsForList().leftPushAll(key, dailyWords);
-        } else {
-            dailyWords = mapperFacade.mapAsList(dailyWordsCache, DailyWord.class);
+
+        String jsonList = (String) redisTemplate.opsForValue().get(key);
+        if (StringUtils.hasLength(jsonList)) {
+            return JSON.parseArray(jsonList, DailyWordVo.class);
         }
-        return dailyWords.stream().map(dailyWordService::getVo).collect(Collectors.toList());
+
+        List<DailyWord> dailyWords = repository.findAllByDayStartsWithOrderByIdDesc(year);
+
+        // List<Object> dailyWordsCache = redisTemplate.opsForList().range(key, 0, -1);
+        // if (CollectionUtil.isEmpty(dailyWordsCache)) {
+        //     // fetch from db
+        //     // cache
+        //     redisTemplate.opsForList().leftPushAll(key, dailyWords);
+        // } else {
+        //     dailyWords = mapperFacade.mapAsList(dailyWordsCache, DailyWord.class);
+        // }
+
+        List<DailyWordVo> dailyWordVos = dailyWords.stream().map(dailyWordService::getVo).collect(Collectors.toList());
+
+        redisTemplate.opsForValue().set(key, JSON.toJSONString(dailyWordVos));
+        return dailyWordVos;
     }
     private String getKey(String year) {
-        return "dailyWord::" + year;
+        return "dailyWordVo::" + year;
     }
 
     // @CacheEvict(key = "#year")
