@@ -2,6 +2,7 @@ package com.example.cms.service;
 
 import com.example.cms.dto.InfoCateDto;
 import com.example.cms.dto.InfoDto;
+import com.example.cms.dto.InfoReq;
 import com.example.cms.storage.entity.Info;
 import com.example.cms.storage.entity.InfoCate;
 import com.example.cms.storage.repository.InfoCateRepository;
@@ -24,6 +25,10 @@ public class InfoService {
 
     public Info detail(Integer id) {
         return repository.findById(id).orElse(null);
+    }
+
+    public List<Info> infoSiblings(InfoReq req) {
+        return repository.findAllByCateIdEqualsAndTitleEqualsOrderByCodeDesc(req.getCateId(), req.getTitle());
     }
 
     public List<Info> infoList(Integer cateId, boolean onlyVisible) {

@@ -126,6 +126,10 @@ create table info_cate
     constraint info_cate_pk
         primary key (id)
 );
+alter table info_cate
+    add clickable bit default 0 not null after name;
+
+
 
 create table property_type
 (

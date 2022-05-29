@@ -21,5 +21,6 @@ public class InfoCate {
 
     private String name;
     private Integer od;
+    private Boolean clickable;
     private Date createTime;
 }

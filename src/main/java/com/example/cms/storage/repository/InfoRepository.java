@@ -11,4 +11,6 @@ public interface InfoRepository extends BaseRepository<Info> {
 
     List<Info> findAllByOrderByCodeDesc();
     List<Info> findAllByCateIdEqualsOrderByCodeDesc(Integer cateId);
+
+    List<Info> findAllByCateIdEqualsAndTitleEqualsOrderByCodeDesc(Integer cateId, String title);
 }

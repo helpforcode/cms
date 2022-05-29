@@ -11,6 +11,7 @@ import java.util.List;
 public class InfoAll {
     private Integer cateId;
     private String cateName;
+    private Boolean clickable;
     private Boolean operating = false;
     private List<Info> infos;
 }
