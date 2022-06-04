@@ -3,6 +3,8 @@ GET {{host}}/admin/article?page=1&size=20&sort=id,asc
 ###
 GET {{host}}/admin/article/1
 token: {{auth_token}}
+###
+GET {{host}}/article/1
 
 ###
 POST {{host}}/admin/article
