@@ -116,6 +116,13 @@ create table info
         primary key (id)
 );
 
+alter table info
+    add name varchar(30) default '' not null after cate_id;
+alter table info
+    add content varchar(2000) default '' null after name;
+
+
+
 
 create table info_cate
 (

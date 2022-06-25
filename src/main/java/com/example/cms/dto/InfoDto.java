@@ -15,6 +15,8 @@ public class InfoDto {
     private Integer code;
 
     private String title;
+    private String name;
+    private String content;
     private Integer cateId;
     private String remark;
     private Boolean visible;
